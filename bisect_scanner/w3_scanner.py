@@ -9,12 +9,12 @@ from bisect_scanner.base_scanner import BaseScanner
 load_dotenv()
 
 
-URL = os.environ('URL', '')
+URL = os.environ('W3_URL', '')
 DECIMALS = 18
 DELAY = 0.0
 
 
-class PolygonScanner(BaseScanner):
+class W3Scanner(BaseScanner):
 
     def __init__(self, account, w3: Union[str, Web3] = URL, *args, **kwargs):
         if isinstance(w3, str):
