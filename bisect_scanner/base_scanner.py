@@ -1,12 +1,21 @@
 from abc import ABC, abstractmethod
+from more_itertools import windowed
+from bisect_scanner import util
 import bisect
 
 
+DEFAULT_SITUATION_SCAN_STEPS = 30
+
+
 class BaseScanner(ABC):
-    def __init__(self, precission=3, interpolation_step=0, scan_step=1):
+    def __init__(
+        self, precission=3, interpolation_step=0, scan_step=1, account=None
+    ):
         self.interpolation_step = interpolation_step
         self.scan_step = scan_step
         self.precission = precission
+        if account:
+            self.account = account
 
     @abstractmethod
     def block_balance(self, block: int):
@@ -39,19 +48,76 @@ class BaseScanner(ABC):
 
     def balance_history(
         self,
+        account=None,
         start_block=0,
         end_block=None,
+        situation_scan_steps=0,
+    ):
+        if account:
+            self.account = account
+        if not self.account:
+            raise ValueError("account not provided")
+        if not end_block:
+            end_block = self.last_block()
+        start_balance = self.block_balance(start_block)
+        end_balance = self.block_balance(end_block)
+        yield start_block, start_balance
+        if end_balance == start_balance:
+            situation_scan_steps = DEFAULT_SITUATION_SCAN_STEPS
+        if situation_scan_steps:
+            situation = self.situation_scan(
+                account=account,
+                start_block=start_block,
+                end_block=end_block,
+                steps=situation_scan_steps,
+            )
+            for (block1, balance1), (block2, balance2) in windowed(
+                situation, 2
+            ):
+                yield from self._balance_history(block1, block2)
+        else:
+            yield from self._balance_history(start_block, end_block)
+
+    def situation_scan(
+        self, start_block=0, end_block=None, account=None, steps=100
+    ):
+        return util.uniq(
+            self._situation_scan(
+                start_block=start_block,
+                end_block=end_block,
+                account=account,
+                steps=steps,
+            )
+        )
+
+    def _situation_scan(
+        self, start_block=0, end_block=None, account=None, steps=100
     ):
         if not end_block:
             end_block = self.last_block()
-        yield start_block, self.block_balance(start_block)
-        yield from self._balance_history(start_block, end_block)
+        scan_blocks = util.scan_steps(
+            start_block=start_block, end_block=end_block, steps=steps
+        )
+        block_balances = zip(scan_blocks, map(self.block_balance, scan_blocks))
+        for (prev_block, prev_balance), (block, balance) in windowed(
+            block_balances, 2
+        ):
+            if prev_balance != balance:
+                yield prev_block, prev_balance
+                yield block, balance
 
 
 class FakeChainScanner(BaseScanner):
-    def __init__(self, BLOCK_BALANCES, *args, **kwargs):
-        self.BLOCK_BALANCES = BLOCK_BALANCES
-        self.BLOCKS, self.BALANCES = zip(*BLOCK_BALANCES)
+    def __init__(self, block_balances=None, account=None, *args, **kwargs):
+        if block_balances:
+            self.BLOCK_BALANCES = block_balances
+        else:
+            from bisect_scanner import example_data
+            self.BLOCK_BALANCES = example_data.BLOCK_BALANCES
+        self.BLOCKS, self.BALANCES = zip(*self.BLOCK_BALANCES)
+        if not account:
+            account = 'fake_account'
+        self.account = account
         super().__init__(*args, **kwargs)
 
     def block_balance(self, block: int):

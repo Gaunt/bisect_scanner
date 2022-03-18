@@ -1,10 +1,7 @@
 import csv
 import sys
 import argparse
-try:
-    from .polygon_scanner import PolygonScanner, DECIMALS
-except ImportError:
-    from polygon_scanner import PolygonScanner, DECIMALS
+from .w3_scanner import PolygonScanner, DECIMALS
 
 
 MUSKAN = "0x4Bc519F0b7b348FaE780Afb2DD4aa76841bA8e9e"
