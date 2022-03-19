@@ -1,3 +1,4 @@
+from pathlib import Path
 import io
 import os
 import re
@@ -9,13 +10,6 @@ try: # for pip >= 10
     from pip._internal.req import parse_requirements
 except ImportError: # for pip <= 9.0.3
     from pip.req import parse_requirements
-    
-
-def read(filename):
-    filename = os.path.join(os.path.dirname(__file__), filename)
-    text_type = type(u"")
-    with io.open(filename, mode="r", encoding='utf-8') as fd:
-        return re.sub(text_type(r':[a-z]+:`~?(.*?)`'), text_type(r'``\1``'), fd.read())
 
 
 install_reqs = parse_requirements('requirements.txt', session='hack')
@@ -24,6 +18,9 @@ try:
     reqs = [str(ir.req) for ir in install_reqs]
 except AttributeError:
     reqs = [str(ir.requirement) for ir in install_reqs]
+
+
+README = Path(os.path.join(os.path.dirname(__file__) / "README.md").read_text()
 
 setup(
     name="bisect_scanner",
@@ -35,7 +32,9 @@ setup(
     author_email="novakk5@gmail.com",
 
     description="Scan for balance history",
-    long_description=read("README.md"),
+
+    long_description_content_type="text/markdown",
+    long_description=README,
 
     packages=find_packages(exclude=('tests',)),
 

@@ -43,7 +43,7 @@ def parse_args(argv):
         "--start_block", type=int, default=0, help="Start Block"
     )
     parser.add_argument("--end_block", type=int, help="End Block")
-    parser.add_argument("--scanner", type=, help="End Block")
+    parser.add_argument("--scanner", help="End Block")
     return parser.parse_args(argv)
 
 
