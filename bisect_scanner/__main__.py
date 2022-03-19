@@ -17,7 +17,7 @@ def write_csv(events):
 
 
 def main(
-    account=SAMPLE_ADDRESS,
+    account,
     precission=3,
     start_block=0,
     end_block=None,
@@ -30,8 +30,8 @@ def main(
 
 def parse_args(argv):
     parser = argparse.ArgumentParser(
-        description="Polygon balance history.\n"
-        f"Example: python polygon_client.py --account={SAMPLE_ADDRESS} --precission={DECIMALS}"
+        description="Account balance history.\n"
+        f"Example: python -m bisect_scanner --account={SAMPLE_ADDRESS} --precission={DECIMALS}"
     )
     parser.add_argument("--account", help="address")
     parser.add_argument("--scan_step", type=int, default=1, help="scan step")
@@ -43,6 +43,7 @@ def parse_args(argv):
         "--start_block", type=int, default=0, help="Start Block"
     )
     parser.add_argument("--end_block", type=int, help="End Block")
+    parser.add_argument("--scanner", type=, help="End Block")
     return parser.parse_args(argv)
 
 

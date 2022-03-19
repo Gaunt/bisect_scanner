@@ -4,8 +4,12 @@ import re
 
 from setuptools import find_packages
 from setuptools import setup
-from pip.req import parse_requirements
 
+try: # for pip >= 10
+    from pip._internal.req import parse_requirements
+except ImportError: # for pip <= 9.0.3
+    from pip.req import parse_requirements
+    
 
 def read(filename):
     filename = os.path.join(os.path.dirname(__file__), filename)
@@ -15,8 +19,11 @@ def read(filename):
 
 
 install_reqs = parse_requirements('requirements.txt', session='hack')
-reqs = [str(ir.req) for ir in install_reqs]
 
+try:
+    reqs = [str(ir.req) for ir in install_reqs]
+except AttributeError:
+    reqs = [str(ir.requirement) for ir in install_reqs]
 
 setup(
     name="bisect_scanner",
@@ -28,7 +35,7 @@ setup(
     author_email="novakk5@gmail.com",
 
     description="Scan for balance history",
-    long_description=read("README.rst"),
+    long_description=read("README.md"),
 
     packages=find_packages(exclude=('tests',)),
 

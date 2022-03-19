@@ -1,32 +1,26 @@
 bisect_scanner
-==============
-
-.. image:: https://img.shields.io/pypi/v/bisect_scanner.svg
-    :target: https://pypi.python.org/pypi/bisect_scanner
-    :alt: Latest PyPI version
-
-.. image:: https://travis-ci.org/kragniz/cookiecutter-pypackage-minimal.png
-   :target: https://travis-ci.org/kragniz/cookiecutter-pypackage-minimal
-   :alt: Latest Travis CI build status
+================
 
 Scan for balance history
 
 Usage
------
+-----------------
 
-Installation
-------------
 
-Requirements
-^^^^^^^^^^^^
+>>> from bisect_scanner import W3Scanner
+>>> W3_URL = '...' # w3 archive node url
+>>> account = '0x790370ff5045bCeCc2161f0913302FCCC7Ee256d'
+# https://etherscan.io/address/0x790370ff5045bCeCc2161f0913302FCCC7Ee256d
+>>> scanner = W3Scanner(W3_URL)
+>>> [*eth.balance_history('0x790370ff5045bCeCc2161f0913302FCCC7Ee256d')] 
+[(0, 0.0),
+ (11503731, 0.005),
+ (12103372, 0.015),
+ (12107610, 0.009),
+ (12425773, 0.0)]
 
-Compatibility
--------------
-
-Licence
--------
 
 Authors
--------
+-------------------------------
 
-`bisect_scanner` was written by `Karel Novak <novakk5@gmail.com>`_.
+*bisect_scanner* was written by Karel Novak.

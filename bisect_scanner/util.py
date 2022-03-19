@@ -1,4 +1,5 @@
-from typing import Iterable, Callable, TypeVar, List
+import time
+from typing import Iterable, Callable, TypeVar, List, Tuple
 import operator as op
 import itertools as it
 
@@ -35,3 +36,21 @@ def uniq(iterable: Iterable[T], fun: Callable[[T, T], bool] = op.eq):
         if not fun(prev, v):
             yield v
             prev = v
+
+
+def slowed_down(
+    balances: Iterable[Tuple[int, float]], delay: int = 3
+) -> Iterable[Tuple[int, float]]:
+    """
+    testing purpose only
+    """
+    for balance in balances:
+        time.sleep(delay)
+        yield balance
+
+
+def produce_gradual(balances: Iterable[Tuple[int, float]], delay: int = 3):
+    balances_ = []
+    for balance in slowed_down(list(balances)[:-1], delay):
+        balances_.append(balance)
+        yield balances_ + [balances[-1]]

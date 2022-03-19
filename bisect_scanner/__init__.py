@@ -7,3 +7,4 @@ __all__ = []
 
 from .base_scanner import FakeChainScanner, BaseScanner
 from .w3_scanner import W3Scanner, PolygonScanner, EthereumScanner, Web3
+from .plot import plot

@@ -1,3 +1,4 @@
+from typing import Iterable, Callable, TypeVar, List, Tuple, Union
 from abc import ABC, abstractmethod
 from more_itertools import windowed
 from bisect_scanner import util
@@ -18,11 +19,11 @@ class BaseScanner(ABC):
             self.account = account
 
     @abstractmethod
-    def block_balance(self, block: int):
+    def block_balance(self, block: int) -> float:
         pass
 
     @abstractmethod
-    def last_block(self):
+    def last_block(self) -> int:
         pass
 
     def _balance_history(
@@ -108,19 +109,26 @@ class BaseScanner(ABC):
 
 
 class FakeChainScanner(BaseScanner):
-    def __init__(self, block_balances=None, account=None, *args, **kwargs):
+    def __init__(
+        self,
+        block_balances: Union[None, List[Tuple[int, float]]] = None,
+        account=None,
+        *args,
+        **kwargs
+    ):
         if block_balances:
             self.BLOCK_BALANCES = block_balances
         else:
             from bisect_scanner import example_data
+
             self.BLOCK_BALANCES = example_data.BLOCK_BALANCES
         self.BLOCKS, self.BALANCES = zip(*self.BLOCK_BALANCES)
         if not account:
-            account = 'fake_account'
+            account = "fake_account"
         self.account = account
         super().__init__(*args, **kwargs)
 
-    def block_balance(self, block: int):
+    def block_balance(self, block: int) -> float:
         if block <= 0:
             return 0
         i = bisect.bisect_left(self.BLOCKS, block) - 1
