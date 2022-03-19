@@ -20,7 +20,7 @@ except AttributeError:
     reqs = [str(ir.requirement) for ir in install_reqs]
 
 
-README = Path(os.path.join(os.path.dirname(__file__) / "README.md").read_text()
+README = Path(os.path.join(os.path.dirname(__file__)) / "README.md").read_text()
 
 setup(
     name="bisect_scanner",
