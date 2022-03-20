@@ -1,8 +1,4 @@
 from pathlib import Path
-import io
-import os
-import re
-
 from setuptools import find_packages
 from setuptools import setup
 
@@ -20,7 +16,7 @@ except AttributeError:
     reqs = [str(ir.requirement) for ir in install_reqs]
 
 
-README = (Path(os.path.dirname(__file__)) / "README.md").read_text()
+README = (Path(__file__).absolute().parent / "README.md").read_text()
 
 
 setup(
