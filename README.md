@@ -20,4 +20,4 @@ Scan for balance history
 
 ## Authors
 
-`bisect_scanner` was written by `Karel Novak <novakk5@gmail.com>`_.
+`bisect_scanner` was written by `Karel Novak`.

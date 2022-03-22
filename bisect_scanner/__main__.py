@@ -1,7 +1,8 @@
 import csv
 import sys
 import argparse
-from .w3_scanner import PolygonScanner, DECIMALS
+from .w3_scanner import PolygonScanner, EthereumScanner, DECIMALS
+from .base_scanner import SlowedDownScanner
 
 
 SAMPLE_ADDRESS = "0xCD6909C37CCEA877a5c8e9a3ffd69d9D9943409F"
@@ -22,10 +23,21 @@ def main(
     start_block=0,
     end_block=None,
     interpolation_step=0,
-    scan_step=1
+    scan_step=1,
+    scanner="Ethereum",
 ):
-    scanner = PolygonScanner(account)
-    write_csv(scanner.balance_history(start_block, end_block))
+    assert account
+    if scanner == "Polygon":
+        scanner = PolygonScanner()
+    elif scanner == "fake":
+        scanner = SlowedDownScanner(delay=1)
+    else:
+        scanner = EthereumScanner()
+    write_csv(
+        scanner.balance_history(
+            account=account, start_block=start_block, end_block=end_block
+        )
+    )
 
 
 def parse_args(argv):
@@ -43,11 +55,15 @@ def parse_args(argv):
         "--start_block", type=int, default=0, help="Start Block"
     )
     parser.add_argument("--end_block", type=int, help="End Block")
-    parser.add_argument("--scanner", help="End Block")
+    parser.add_argument(
+        "--polygon", action="store_true", help="Polygon (MATIC native Token)"
+    )
+    parser.add_argument("--ethereum", action="store_true", help="Ethereum")
+    parser.add_argument("--fake", action="store_true", help="Ethereum")
     return parser.parse_args(argv)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__": # pragma: nocov
     args = parse_args(sys.argv[1:])
     main(
         args.account,
@@ -56,4 +72,5 @@ if __name__ == "__main__":
         interpolation_step=args.interpolation_step,
         precission=args.precission,
         scan_step=args.scan_step,
+        scanner="Ethereum" if not args.polygon else "Polygon",
     )

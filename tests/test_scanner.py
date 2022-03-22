@@ -1,5 +1,6 @@
 import operator as op
-from bisect_scanner.base_scanner import FakeChainScanner
+import pytest
+from bisect_scanner.base_scanner import FakeChainScanner, SlowedDownScanner
 from bisect_scanner.example_data import (
     BLOCK_BALANCES,
     BLOCK_BALANCES_2,
@@ -37,6 +38,24 @@ def test_balance_history():
     ]
 
 
+def test_no_account():
+    scanner = FakeChainScanner(account=None)
+    with pytest.raises(ValueError):
+        [*scanner.balance_history()]
+
+
+def test_no_end_block():
+    scanner = FakeChainScanner(account=ACCOUNT)
+    balance_history = [*scanner.balance_history()]
+    assert balance_history == [
+        (0, 0),
+        (1001, 2000),
+        (200001, 1),
+        (200002, 4000),
+        (200101, 2),
+    ]
+
+
 def test_balance_history_with_interpolation():
     scanner = FakeChainScanner(
         BLOCK_BALANCES, interpolation_step=1, account=ACCOUNT
@@ -54,16 +73,32 @@ def test_balance_history_with_interpolation():
         (1000000, 2),
         (1000001, 10),
     ]
-    scanner = FakeChainScanner(
-        BLOCK_BALANCES_2, interpolation_step=4, account=ACCOUNT
-    )
-    assert [*scanner.balance_history(end_block=2000)] == [
+    scanner = FakeChainScanner(BLOCK_BALANCES_2, interpolation_step=4)
+    assert [*scanner.balance_history(end_block=2000, account=ACCOUNT)] == [
         (0, 0),
         (0, 0),
         (1, 1000),
         (5, 1001.5),
         (1000, 1003),
         (1001, 2000),
+    ]
+
+
+def test_balance_history_slowed_down():
+    scanner = SlowedDownScanner(BLOCK_BALANCES, account=ACCOUNT)
+    assert [
+        *map(
+            op.itemgetter(1),
+            scanner.balance_history(end_block=1_000_001),
+        )
+    ] == [0, 2000, 1, 4000, 2, 10]
+    assert [*map(tuple, scanner.balance_history(end_block=1_000_001))] == [
+        (0, 0),
+        (1001, 2000),
+        (200_001, 1),
+        (200_002, 4000),
+        (200_101, 2),
+        (1_000_001, 10),
     ]
 
 
