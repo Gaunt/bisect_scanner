@@ -19,7 +19,7 @@ README = (Path(__file__).absolute().parent / "README.md").read_text()
 
 setup(
     name="bisect_scanner",
-    version="0.1.2",
+    version="0.1.3",
     url="https://github.com/Gaunt/bisect_scanner",
     license="MIT",
     author="Karel Novak",
