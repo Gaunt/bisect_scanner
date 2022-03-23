@@ -1,4 +1,7 @@
-from typing import Iterable, Callable, TypeVar, List, Tuple
+from typing import Iterable, Tuple
+import time
+from bisect_scanner.util import produce_gradual
+import itertools as it
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -10,7 +13,8 @@ def axes(balances):
     x_axis, y_axis = [*zip(*balances)]
     x_start, x_end = x_axis[0], x_axis[-1]
     xdiff = x_end - x_start
-    x_axis = [round(((x - x_start) / xdiff) * STEPS) for x in x_axis]
+    if xdiff:
+        x_axis = [round(((x - x_start) / xdiff) * STEPS) for x in x_axis]
     return x_axis, [*y_axis]
 
 
@@ -42,7 +46,19 @@ def plot(balances: Iterable[Tuple[int, float]], block=True):
     return plt
 
 
-def plot_gradual(producer: Iterable[List[Tuple[int, float]]]):
-    for balances in producer:
-        plt = plot(balances, block=False)
+def plot_gradual(balances: Iterable[Tuple[int, float]]):
+    for balances_ in produce_gradual(balances):
+        plt = plot(balances_, block=False)
+        plt.pause(0.1)
+        plt.cla()
+    time.sleep(5)
+
+
+def with_plot(balances: Iterable[Tuple[int, float]], end_block=None):
+    balances1, balances2 = it.tee(balances)
+    producer = produce_gradual(balances1, end_block)
+    for balances_, balance in zip(producer, balances2):
+        yield balance
+        plt = plot(balances_, block=False)
         plt.pause(0.01)
+        plt.cla()

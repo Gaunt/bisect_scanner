@@ -3,6 +3,7 @@ import sys
 import argparse
 from .w3_scanner import PolygonScanner, EthereumScanner, DECIMALS
 from .base_scanner import SlowedDownScanner
+from .plot import with_plot
 
 
 SAMPLE_ADDRESS = "0xCD6909C37CCEA877a5c8e9a3ffd69d9D9943409F"
@@ -25,6 +26,7 @@ def main(
     interpolation_step=0,
     scan_step=1,
     scanner="Ethereum",
+    plot=False,
 ):
     assert account
     if scanner == "Polygon":
@@ -33,11 +35,16 @@ def main(
         scanner = SlowedDownScanner(delay=1)
     else:
         scanner = EthereumScanner()
-    write_csv(
-        scanner.balance_history(
-            account=account, start_block=start_block, end_block=end_block
-        )
+    if not end_block:
+        end_block = scanner.last_block()
+    balances = scanner.balance_history(
+        account=account, start_block=start_block, end_block=end_block
     )
+    if plot:
+        balances = with_plot(balances, end_block)
+    write_csv(balances)
+    if plot:
+        input("Press Enter to continue...")
 
 
 def parse_args(argv):
@@ -60,10 +67,11 @@ def parse_args(argv):
     )
     parser.add_argument("--ethereum", action="store_true", help="Ethereum")
     parser.add_argument("--fake", action="store_true", help="Ethereum")
+    parser.add_argument("--plot", action="store_true", help="plot chart")
     return parser.parse_args(argv)
 
 
-if __name__ == "__main__": # pragma: nocov
+if __name__ == "__main__":  # pragma: no cover
     args = parse_args(sys.argv[1:])
     main(
         args.account,
@@ -73,4 +81,5 @@ if __name__ == "__main__": # pragma: nocov
         precission=args.precission,
         scan_step=args.scan_step,
         scanner="Ethereum" if not args.polygon else "Polygon",
+        plot=args.plot
     )

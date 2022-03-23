@@ -1,4 +1,4 @@
-from bisect_scanner.plot import axes, step_fn, plot
+from bisect_scanner.plot import axes, step_fn, plot, with_plot, plot_gradual
 from bisect_scanner.util import slowed_down, produce_gradual
 import time
 import pytest
@@ -33,9 +33,17 @@ def test_plot():
 
 @pytest.mark.skip()
 def test_plot_gradual():
-    for balances in produce_gradual(BALANCES):
-        plt = plot(balances, block=False)
-        plt.pause(0.1)
-        plt.cla()
-    # plot(balances)
-    time.sleep(5)
+    plot_gradual(slowed_down(BALANCES))
+
+
+@pytest.mark.skip()
+def test_with_plot():
+    balances = [*with_plot(slowed_down(BALANCES))]
+    assert balances == [
+        (0, 0.0),
+        (11503731, 0.005),
+        (12103372, 0.015),
+        (12107610, 0.009),
+        (12425773, 0.0),
+        (14412861, 0.0),
+    ]

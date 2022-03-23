@@ -39,7 +39,7 @@ def uniq(iterable: Iterable[T], fun: Callable[[T, T], bool] = op.eq):
 
 
 def slowed_down(
-    balances: Iterable[Tuple[int, float]], delay: int = 3
+    balances: Iterable[Tuple[int, float]], delay: int = 1
 ) -> Iterable[Tuple[int, float]]:
     """
     testing purpose only
@@ -49,8 +49,10 @@ def slowed_down(
         yield balance
 
 
-def produce_gradual(balances: Iterable[Tuple[int, float]], delay: int = 3):
+def produce_gradual(
+    balances: Iterable[Tuple[int, float]], end_block=None, delay=0
+):
     balances_ = []
-    for balance in slowed_down(list(balances)[:-1], delay):
+    for balance in slowed_down(balances, delay):
         balances_.append(balance)
-        yield balances_ + [balances[-1]]
+        yield balances_.copy() + ([(end_block, 0)] if end_block else [])
