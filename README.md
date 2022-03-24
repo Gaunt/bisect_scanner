@@ -2,6 +2,8 @@
 
 Scan for balance history
 
+![](peek_2_fast.gif)
+
 ## Usage
 
 ```python

@@ -36,20 +36,25 @@ def step_fn(x_axis, y_axis):
     return ls_y
 
 
-def plot(balances: Iterable[Tuple[int, float]], block=True):
+def plot(balances: Iterable[Tuple[int, float]], block=True, show=True, zoom=False):
     x_axis, y_axis = axes(balances)
     ls_y = step_fn(x_axis, y_axis)
     ls_x = np.linspace(0, STEPS, STEPS)
+    plt.cla()
     plt.xticks(*ticks(balances))
     plt.plot(ls_x, ls_y)
-    plt.show(block=block)
-    return plt
+    if zoom:
+        mng = plt.get_current_fig_manager()
+        mng.resize(1500, 700)
+    if show:
+        plt.show(block=block)
+        plt.pause(1)
 
 
 def plot_gradual(balances: Iterable[Tuple[int, float]]):
     for balances_ in produce_gradual(balances):
         plt = plot(balances_, block=False)
-        plt.pause(0.1)
+        plt.pause(1)
         plt.cla()
     time.sleep(5)
 
@@ -57,8 +62,8 @@ def plot_gradual(balances: Iterable[Tuple[int, float]]):
 def with_plot(balances: Iterable[Tuple[int, float]], end_block=None):
     balances1, balances2 = it.tee(balances)
     producer = produce_gradual(balances1, end_block)
+    plt.ion()
     for balances_, balance in zip(producer, balances2):
         yield balance
-        plt = plot(balances_, block=False)
-        plt.pause(0.01)
-        plt.cla()
+        show = len(balances_) > 0
+        plot(balances_, block=False, show=show, zoom=True)
