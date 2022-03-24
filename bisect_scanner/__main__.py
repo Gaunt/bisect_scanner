@@ -49,10 +49,10 @@ def main(
 
 def parse_args(argv):
     parser = argparse.ArgumentParser(
-        prog='python -m bisecect_scanner',
-        description="Outputs account balance history on stdout in a csv format,"
+        prog="python -m bisecect_scanner",
+        description="Outputs account balance history on stdout in the csv format,"
         " also can plot a chart with --plot switch.\n"
-        f"Example: python -m bisect_scanner --account={SAMPLE_ADDRESS}"
+        f"Example: python -m bisect_scanner --account={SAMPLE_ADDRESS}",
     )
     parser.add_argument("--account", help="address")
     parser.add_argument("--scan_step", type=int, default=1, help="scan step")
@@ -67,8 +67,14 @@ def parse_args(argv):
     parser.add_argument(
         "--polygon", action="store_true", help="Polygon (MATIC native Token)"
     )
-    parser.add_argument("--ethereum", action="store_true", help="Ethereum")
-    parser.add_argument("--fake", action="store_true", help="Ethereum")
+    parser.add_argument(
+        "--ethereum", action="store_true", help="Ethereum (default)"
+    )
+    parser.add_argument(
+        "--fake",
+        action="store_true",
+        help="fake chain for testing purposes only",
+    )
     parser.add_argument("--plot", action="store_true", help="plot chart")
     return parser.parse_args(argv)
 
@@ -83,5 +89,5 @@ if __name__ == "__main__":  # pragma: no cover
         precission=args.precission,
         scan_step=args.scan_step,
         scanner="Ethereum" if not args.polygon else "Polygon",
-        plot=args.plot
+        plot=args.plot,
     )

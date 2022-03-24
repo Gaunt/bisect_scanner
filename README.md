@@ -39,7 +39,7 @@ usage: python -m bisecect_scanner [-h] [--account ACCOUNT]
                                   [--end_block END_BLOCK] [--polygon]
                                   [--ethereum] [--fake] [--plot]
 
-Outputs account balance history on stdout in a csv format, also can plot a
+Outputs account balance history on stdout in the csv format, also can plot a
 chart with --plot switch. Example: python -m bisect_scanner
 --account=0xCD6909C37CCEA877a5c8e9a3ffd69d9D9943409F
 
@@ -57,10 +57,9 @@ optional arguments:
   --end_block END_BLOCK
                         End Block
   --polygon             Polygon (MATIC native Token)
-  --ethereum            Ethereum mainnet (default)
-  --fake                Ethereum
+  --ethereum            Ethereum (default)
+  --fake                fake chain for testing purposes only
   --plot                plot chart
-
 ```
 
 ### An Example
