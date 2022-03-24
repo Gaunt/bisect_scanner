@@ -57,7 +57,7 @@ optional arguments:
   --end_block END_BLOCK
                         End Block
   --polygon             Polygon (MATIC native Token)
-  --ethereum            Ethereum
+  --ethereum            Ethereum mainnet (default)
   --fake                Ethereum
   --plot                plot chart
 
