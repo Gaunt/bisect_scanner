@@ -49,8 +49,10 @@ def main(
 
 def parse_args(argv):
     parser = argparse.ArgumentParser(
-        description="Account balance history.\n"
-        f"Example: python -m bisect_scanner --account={SAMPLE_ADDRESS} --precission={DECIMALS}"
+        prog='python -m bisecect_scanner',
+        description="Outputs account balance history on stdout in a csv format,"
+        " also can plot a chart with --plot switch.\n"
+        f"Example: python -m bisect_scanner --account={SAMPLE_ADDRESS}"
     )
     parser.add_argument("--account", help="address")
     parser.add_argument("--scan_step", type=int, default=1, help="scan step")

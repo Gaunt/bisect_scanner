@@ -2,8 +2,6 @@
 
 Scan for balance history
 
-![](peek_2_fast.gif)
-
 ## Usage
 
 ```python
@@ -19,6 +17,61 @@ Scan for balance history
  (12107610, 0.009),
  (12425773, 0.0)]
 ```
+
+## Installing bisect_scanner
+
+bisect_scanner is available on PyPI:
+
+```console
+$ pip install bisect-scanner
+```
+
+## Command line utility
+
+
+```console
+$ python -m bisect_scanner --help
+usage: python -m bisecect_scanner [-h] [--account ACCOUNT]
+                                  [--scan_step SCAN_STEP]
+                                  [--precission PRECISSION]
+                                  [--interpolation_step INTERPOLATION_STEP]
+                                  [--start_block START_BLOCK]
+                                  [--end_block END_BLOCK] [--polygon]
+                                  [--ethereum] [--fake] [--plot]
+
+Outputs account balance history on stdout in a csv format, also can plot a
+chart with --plot switch. Example: python -m bisect_scanner
+--account=0xCD6909C37CCEA877a5c8e9a3ffd69d9D9943409F
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --account ACCOUNT     address
+  --scan_step SCAN_STEP
+                        scan step
+  --precission PRECISSION
+                        precission
+  --interpolation_step INTERPOLATION_STEP
+                        interpolation step
+  --start_block START_BLOCK
+                        Start Block
+  --end_block END_BLOCK
+                        End Block
+  --polygon             Polygon (MATIC native Token)
+  --ethereum            Ethereum
+  --fake                Ethereum
+  --plot                plot chart
+
+```
+
+### An Example
+
+
+```console
+$ python -m bisect_scanner --account='0x790370ff5045bCeCc2161f0913302FCCC7Ee256d' --plot
+```
+
+![](peek_2_fast.gif)
+
 
 ## Authors
 
