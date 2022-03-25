@@ -3,9 +3,10 @@ import os
 from pathlib import Path
 from functools import lru_cache
 from typing import Union
-from web3 import Web3
+import web3
 from dotenv import load_dotenv
-from bisect_scanner.base_scanner import BaseScanner
+from bisect_scanner.base_scanner import BaseScanner, FakeChainScanner
+
 
 
 user_config = Path(os.path.expanduser("~")) / '.config/bisect_scanner_rc'
@@ -23,10 +24,10 @@ CACHE_SIZE = 10000
 
 class W3Scanner(BaseScanner):
     def __init__(
-        self, account=None, w3: Union[str, Web3] = W3_URL, *args, **kwargs
+        self, account=None, w3: Union[str, web3.Web3] = W3_URL, *args, **kwargs
     ):
         if isinstance(w3, str):
-            self.web3 = Web3(Web3.WebsocketProvider(w3))
+            self.web3 = web3.Web3(web3.Web3.WebsocketProvider(w3))
         else:
             self.web3 = w3
 
