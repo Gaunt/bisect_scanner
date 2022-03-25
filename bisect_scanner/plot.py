@@ -51,12 +51,12 @@ def plot(balances: Iterable[Tuple[int, float]], block=True, show=True, zoom=Fals
         plt.pause(1)
 
 
-def plot_gradual(balances: Iterable[Tuple[int, float]]):
+def plot_gradual(balances: Iterable[Tuple[int, float]], wait_after=0):
     for balances_ in produce_gradual(balances):
-        plt = plot(balances_, block=False)
+        plot(balances_, block=False)
         plt.pause(1)
         plt.cla()
-    time.sleep(5)
+    time.sleep(wait_after)
 
 
 def with_plot(balances: Iterable[Tuple[int, float]], end_block=None):

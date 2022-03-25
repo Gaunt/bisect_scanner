@@ -1,8 +1,8 @@
-from bisect_scanner.plot import axes, step_fn, plot, with_plot, plot_gradual
+import bisect_scanner.plot as plot  # axes, step_fn, plot, with_plot, plot_gradual
 from bisect_scanner.util import slowed_down, produce_gradual
 import time
 import pytest
-
+from unittest.mock import MagicMock
 
 BALANCES = [
     (0, 0.0),
@@ -14,31 +14,31 @@ BALANCES = [
 ]
 
 
+plot.plt.show = MagicMock
+
+
 def test_axes():
-    x_axis, y_axis = axes(BALANCES)
+    x_axis, y_axis = plot.axes(BALANCES)
     assert x_axis == [0, 7982, 8398, 8401, 8621, 10000]
     assert y_axis == [0.0, 0.005, 0.015, 0.009, 0.0, 0.0]
 
 
 def test_step_fn():
-    x_axis, y_axis = axes(BALANCES)
-    linsp = step_fn(x_axis, y_axis)
+    x_axis, y_axis = plot.axes(BALANCES)
+    linsp = plot.step_fn(x_axis, y_axis)
     assert set(linsp) == {0.0, 0.015, 0.009, 0.005}
 
 
-@pytest.mark.skip()
 def test_plot():
-    plot(BALANCES)
+    plot.plot(BALANCES)
 
 
-@pytest.mark.skip()
 def test_plot_gradual():
-    plot_gradual(slowed_down(BALANCES))
+    plot.plot_gradual(slowed_down(BALANCES, delay=0))
 
 
-@pytest.mark.skip()
 def test_with_plot():
-    balances = [*with_plot(slowed_down(BALANCES))]
+    balances = [*plot.with_plot(slowed_down(BALANCES, delay=0))]
     assert balances == [
         (0, 0.0),
         (11503731, 0.005),
