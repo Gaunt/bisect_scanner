@@ -1,7 +1,7 @@
 import csv
 import sys
 import argparse
-from .w3_scanner import PolygonScanner, EthereumScanner, DECIMALS
+from .w3_scanner import PolygonScanner, EtherScanner, DECIMALS
 from .base_scanner import SlowedDownScanner
 from .plot import with_plot
 
@@ -26,6 +26,7 @@ def main(
     interpolation_step=0,
     scan_step=1,
     scanner="Ethereum",
+    contract_address=None,
     plot=False,
 ):
     assert account
@@ -34,7 +35,7 @@ def main(
     elif scanner == "fake":
         scanner = SlowedDownScanner(delay=1)
     else:
-        scanner = EthereumScanner()
+        scanner = EtherScanner(contract_address=contract_address)
     if not end_block:
         end_block = scanner.last_block()
     balances = scanner.balance_history(
@@ -55,6 +56,8 @@ def parse_args(argv):
         f"Example: python -m bisect_scanner --account={SAMPLE_ADDRESS}",
     )
     parser.add_argument("--account", help="address")
+    parser.add_argument("--contract_address", help="ERC20 contract address")
+
     parser.add_argument("--scan_step", type=int, default=1, help="scan step")
     parser.add_argument("--precission", type=int, default=3, help="precission")
     parser.add_argument(
@@ -89,5 +92,6 @@ if __name__ == "__main__":  # pragma: no cover
         precission=args.precission,
         scan_step=args.scan_step,
         scanner="Ethereum" if not args.polygon else "Polygon",
+        contract_address=args.contract_address,
         plot=args.plot,
     )

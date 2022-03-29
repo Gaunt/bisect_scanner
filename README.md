@@ -5,17 +5,19 @@ Scan for balance history
 ## Usage
 
 ```python
->>> from bisect_scanner import W3Scanner
->>> W3_URL = '...' # w3 archive node url
+>>> from bisect_scanner import EtherScanner, EthereumERC20Scanner
 >>> account = '0x790370ff5045bCeCc2161f0913302FCCC7Ee256d'
-# https://etherscan.io/address/0x790370ff5045bCeCc2161f0913302FCCC7Ee256d
->>> scanner = W3Scanner(W3_URL)
->>> [*eth.balance_history('0x790370ff5045bCeCc2161f0913302FCCC7Ee256d')] 
+>>> scanner = EtherScanner()
+>>> [*scanner.balance_history(account='0x790370ff5045bCeCc2161f0913302FCCC7Ee256d')] 
 [(0, 0.0),
  (11503731, 0.005),
  (12103372, 0.015),
  (12107610, 0.009),
  (12425773, 0.0)]
+
+>>> scanner = EthereumERC20Scanner(contract_address='0x0258f474786ddfd37abce6df6bbb1dd5dfc4434a')
+>>> [*scanner.balance_history(account='0x790370ff5045bCeCc2161f0913302FCCC7Ee256d')]
+[(0, 0.0), (11503719, 200.0), (12107610, 0.0)]
 ```
 
 ## Installing bisect_scanner
