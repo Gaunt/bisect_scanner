@@ -38,9 +38,9 @@ class FakeWeb3:
         self.eth = MagicMock()
         self.eth.getBalance = fake_block_balance
         if 'polygon' in provider.url:
-            self.eth.blockNomber = 20856090 + 10
+            self.eth.blockNumber = 20856090 + 10
         else:
-            self.eth.blockNomber = 12425773 + 10
+            self.eth.blockNumber = 12425773 + 10
 
     def isConnected(self):
         return True
@@ -51,6 +51,7 @@ class FakeWeb3:
 
 
 # w3_scanner.web3.Web3 = FakeWeb3
+
 
 @pytest.mark.skip()
 def test_polygon():
