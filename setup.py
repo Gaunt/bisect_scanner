@@ -1,6 +1,8 @@
 from pathlib import Path
 from setuptools import find_packages
 from setuptools import setup
+import bisect_scanner
+
 
 try:
     from pip._internal.req import parse_requirements
@@ -19,7 +21,7 @@ README = (Path(__file__).absolute().parent / "README.md").read_text()
 
 setup(
     name="bisect_scanner",
-    version="0.1.5",
+    version=bisect_scanner.__version__,
     url="https://github.com/Gaunt/bisect_scanner",
     license="MIT",
     author="Karel Novak",
