@@ -1,6 +1,6 @@
 # bisect_scanner
 
-Scan for balance history
+Determine crypro accounts balance history using bisection algorithm
 
 ## Usage
 
