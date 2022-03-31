@@ -20,11 +20,11 @@ class BaseScanner(ABC):
 
     @abstractmethod
     def block_balance(self, block: int) -> float:
-        raise NotImplementedError # pragma: no cover
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
     def last_block(self) -> int:
-        raise NotImplementedError # pragma: no cover
+        raise NotImplementedError  # pragma: no cover
 
     def _balance_history(
         self,
@@ -35,7 +35,11 @@ class BaseScanner(ABC):
         mid = start_block + diff // 2
         start_balance = self.block_balance(start_block)
         end_balance = self.block_balance(end_block)
-        if abs(start_balance - end_balance) > self.interpolation_step:
+        if start_balance is None and end_balance is None:
+            return
+        if (start_balance is None) or (
+            abs(start_balance - end_balance) > self.interpolation_step
+        ):
             if diff > self.scan_step:
                 yield from self._balance_history(start_block, mid)
                 yield from self._balance_history(mid, end_block)
@@ -62,7 +66,8 @@ class BaseScanner(ABC):
             end_block = self.last_block()
         start_balance = self.block_balance(start_block)
         end_balance = self.block_balance(end_block)
-        yield start_block, start_balance
+        if start_balance is not None:
+            yield start_block, start_balance
         if end_balance == start_balance:
             situation_scan_steps = DEFAULT_SITUATION_SCAN_STEPS
         if situation_scan_steps:
@@ -114,7 +119,7 @@ class FakeChainScanner(BaseScanner):
         block_balances: Union[None, List[Tuple[int, float]]] = None,
         account="fake_account",
         *args,
-        **kwargs
+        **kwargs,
     ):
         if block_balances:
             self.BLOCK_BALANCES = block_balances
@@ -138,13 +143,13 @@ class FakeChainScanner(BaseScanner):
 
 class SlowedDownScanner(FakeChainScanner):
     def __init__(
-            self,
-            block_balances: Union[None, List[Tuple[int, float]]] = None,
-            account=None,
-            delay=0,
-            *args,
-            **kwargs,
-            ):
+        self,
+        block_balances: Union[None, List[Tuple[int, float]]] = None,
+        account=None,
+        delay=0,
+        *args,
+        **kwargs,
+    ):
         self.delay = delay
         super().__init__(block_balances, account, *args, **kwargs)
 
@@ -155,9 +160,12 @@ class SlowedDownScanner(FakeChainScanner):
         end_block=None,
         situation_scan_steps=0,
     ):
-        yield from util.slowed_down(super().balance_history(
-            account=account,
-            start_block=start_block,
-            end_block=end_block,
-            situation_scan_steps=situation_scan_steps,
-        ), self.delay)
+        yield from util.slowed_down(
+            super().balance_history(
+                account=account,
+                start_block=start_block,
+                end_block=end_block,
+                situation_scan_steps=situation_scan_steps,
+            ),
+            self.delay,
+        )

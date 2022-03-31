@@ -117,7 +117,10 @@ class W3Scanner(BaseScanner):
             )
         else:
             balance = self.w3().eth.getBalance(str(self.account), block)
-        return round(balance * pow(10, -self.decimals), self.precission)
+        if balance is None:
+            return None
+        else:
+            return round(balance * pow(10, -self.decimals), self.precission)
 
     def token_balance(self, account, block, contract_address):
         try:
@@ -125,7 +128,7 @@ class W3Scanner(BaseScanner):
                 self.web3, contract_address, account, block
             )
         except web3.exceptions.BadFunctionCallOutput:
-            return 0.0
+            return None
 
     def last_block(self):
         return self.w3().eth.blockNumber

@@ -54,5 +54,5 @@ def test_polygon():
 @pytest.mark.skip()
 def test_ethereum():
     ether = EtherScanner()
-    balance_history = [*ether.balance_history(ETH_ACCOUNT, end_block=12425779)]
+    balance_history = [*ether.balance_history(ETH_ACCOUNT)]
     assert balance_history == ETH_ACCOUNT_BALANCE_HISTORY

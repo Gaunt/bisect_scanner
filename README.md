@@ -20,7 +20,7 @@ Determine crypro accounts balance history using bisection algorithm
 >>> scanner = EthereumERC20Scanner(w3=ETHEREUM_W3_URL,
 	contract_address='0x0258f474786ddfd37abce6df6bbb1dd5dfc4434a')
 >>> [*scanner.balance_history(account='0x790370ff5045bCeCc2161f0913302FCCC7Ee256d')]
-[(0, 0.0), (11503719, 200.0), (12107610, 0.0)]
+[(10939214, 0.0), (11503719, 200.0), (12107610, 0.0)]
 ```
 
 ## Installing bisect_scanner
