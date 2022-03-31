@@ -77,7 +77,7 @@ optional arguments:
 $ python -m bisect_scanner --account='0x790370ff5045bCeCc2161f0913302FCCC7Ee256d' --plot
 ```
 
-![](peek_2_fast.gif)
+![](assets/peek_2_fast.gif)
 
 
 ## Authors
