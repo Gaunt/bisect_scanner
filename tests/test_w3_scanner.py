@@ -4,6 +4,11 @@ from bisect_scanner import w3_scanner
 from bisect_scanner import EtherScanner, PolygonScanner, FakeChainScanner
 from unittest.mock import MagicMock
 
+from web3 import (
+    EthereumTesterProvider,
+    Web3,
+)
+
 
 POLYGON_ACCOUNT = "0x1C8e628381A7752C4bE1dd493427D4091e97ba7f"
 POLYGON_ACCOUNT_BALANCE_HISTORY = [
@@ -24,33 +29,19 @@ ETH_ACCOUNT_BALANCE_HISTORY = [
     ]
 
 
-def fake_block_balance(account, block):
-    if account == POLYGON_ACCOUNT:
-        balance_history = POLYGON_ACCOUNT_BALANCE_HISTORY
-    if account == ETH_ACCOUNT:
-        balance_history = ETH_ACCOUNT_BALANCE_HISTORY
-    balance = FakeChainScanner(balance_history).block_balance(block)
-    return balance
+@pytest.fixture
+def tester_provider():
+    return EthereumTesterProvider()
 
 
-class FakeWeb3:
-    def __init__(self, provider, *args, **kwargs):
-        self.eth = MagicMock()
-        self.eth.getBalance = fake_block_balance
-        if 'polygon' in provider.url:
-            self.eth.blockNumber = 20856090 + 10
-        else:
-            self.eth.blockNumber = 12425773 + 10
-
-    def isConnected(self):
-        return True
-
-    @staticmethod
-    def WebsocketProvider(url):
-        return SimpleNamespace(url=url)
+@pytest.fixture
+def eth_tester(tester_provider):
+    return tester_provider.ethereum_tester
 
 
-# w3_scanner.web3.Web3 = FakeWeb3
+@pytest.fixture
+def w3(tester_provider):
+    return Web3(tester_provider)
 
 
 @pytest.mark.skip()
