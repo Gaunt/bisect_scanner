@@ -8,7 +8,7 @@ Determine crypro accounts balance history using bisection algorithm
 >>> from bisect_scanner import EtherScanner, EthereumERC20Scanner
 
 >>> account = '0x790370ff5045bCeCc2161f0913302FCCC7Ee256d'
->>> ETHEREUM_W3_URL = '...' # url for an archive node web3
+>>> ETHEREUM_W3_URL = '...' # url for an archive node web3 or a web3 client instance
 >>> scanner = EtherScanner(w3=ETHEREUM_W3_URL)
 >>> [*scanner.balance_history(account='0x790370ff5045bCeCc2161f0913302FCCC7Ee256d')] 
 [(0, 0.0),
