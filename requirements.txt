@@ -3,3 +3,6 @@ more-itertools==8.2.0
 python-dotenv==0.15.0
 numpy
 matplotlib
+pytest
+web3[tester]
+eth-tester==0.6.0b6

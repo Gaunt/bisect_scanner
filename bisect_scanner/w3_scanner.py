@@ -6,8 +6,11 @@ from functools import lru_cache
 from typing import Union
 import web3
 from dotenv import load_dotenv
-from bisect_scanner.base_scanner import BaseScanner, FakeChainScanner
+from bisect_scanner.base_scanner import BaseScanner
 import requests
+
+
+# MockBackend
 
 
 user_config = Path(os.path.expanduser("~")) / ".config/bisect_scanner_rc"
@@ -109,8 +112,12 @@ class W3Scanner(BaseScanner):
         super().__init__(*args, **kwargs)
 
     @lru_cache(CACHE_SIZE)
-    def block_balance(self, block):
+    def block_balance(self, block=None):
         time.sleep(DELAY)
+        if not self.account:
+            raise ValueError('Account cannot be empty')
+        if not block:
+            block = self.last_block()
         if self.contract_address:
             balance = self.token_balance(
                 self.account, block, self.contract_address
@@ -146,7 +153,8 @@ class EtherScanner(W3Scanner):
 class PolygonScanner(W3Scanner):
     def __init__(self, *args, **kwargs):
         POLYGON_URL = os.getenv("POLYGON_URL", "")
-        super().__init__(w3=POLYGON_URL, *args, **kwargs)
+        kwargs = {'w3': POLYGON_URL, **kwargs}
+        super().__init__(*args, **kwargs)
 
 
 class EthereumERC20Scanner(W3Scanner):

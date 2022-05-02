@@ -1,41 +1,42 @@
 import pytest
-from types import SimpleNamespace
-from bisect_scanner import w3_scanner
-from bisect_scanner import EtherScanner, PolygonScanner, FakeChainScanner
-from unittest.mock import MagicMock
-
-from web3 import (
-    EthereumTesterProvider,
-    Web3,
-)
+from bisect_scanner import EtherScanner, PolygonScanner
+from eth_tester import EthereumTester, MockBackend
+from eth_account import Account, account
+from web3 import EthereumTesterProvider, Web3
 
 
 POLYGON_ACCOUNT = "0x1C8e628381A7752C4bE1dd493427D4091e97ba7f"
+POLYGON_ACCOUNT_TEST_PRIV = (
+    "0x171c24fb6ff126a7da63d361c7db60531e6b536ef7de06ae00ac229608efced7"
+)
 POLYGON_ACCOUNT_BALANCE_HISTORY = [
-            (0, 0.0),
-            (15556480, 712.275),
-            (15591133, 562.275),
-            (20856090, 462.274),
-        ]
+    (0, 0.0),
+    (15556480, 712.275),
+    (15591133, 562.275),
+    (20856090, 462.274),
+]
 
-
-ETH_ACCOUNT = "0x790370ff5045bCeCc2161f0913302FCCC7Ee256d"
+ETH_ACCOUNT = "0x98788F77e4b8519741d7E51B8F54f2F048Fcb5E0"
+ETH_ACCOUNT_TEST_PRIV = (
+    "0x0493aef9e36dca618f93e18e0bf849f8880524d98f0347084902bbd935c4732e"
+)
 ETH_ACCOUNT_BALANCE_HISTORY = [
-        (0, 0.0),
-        (11503731, 0.005),
-        (12103372, 0.015),
-        (12107610, 0.009),
-        (12425773, 0.0),
-    ]
+    (0, 0.0),
+    (11503731, 0.005),
+    (12103372, 0.015),
+    (12107610, 0.009),
+    (12425773, 0.0),
+]
 
 
 @pytest.fixture
 def tester_provider():
-    return EthereumTesterProvider()
+    ethereum_tester = EthereumTester(backend=MockBackend())
+    return EthereumTesterProvider(ethereum_tester=ethereum_tester)
 
 
 @pytest.fixture
-def eth_tester(tester_provider):
+def eth_tester_polygon(tester_provider):
     return tester_provider.ethereum_tester
 
 
@@ -44,15 +45,52 @@ def w3(tester_provider):
     return Web3(tester_provider)
 
 
+@pytest.fixture
+def w3_with_eth_account(tester_provider):
+    w3 = Web3(tester_provider)
+    tester = tester_provider.ethereum_tester
+    priv_key = ETH_ACCOUNT_TEST_PRIV
+    tester.add_account(priv_key)
+    account = w3.eth.account.from_key(priv_key)
+    print(tester.get_accounts()[-1])
+    print(account.address)
+    assert account.address == ETH_ACCOUNT
+    # insert_account(tester, account, balance_history)
+    return Web3(tester_provider)
+
+
+def test_polygon_balance(w3_with_eth_account):
+    polygon = PolygonScanner(w3=w3_with_eth_account, account=ETH_ACCOUNT)
+    assert polygon.block_balance(ETH_ACCOUNT) == 1000000.0
+
+
 @pytest.mark.skip()
-def test_polygon():
-    polygon = PolygonScanner()
-    balance_history = [*polygon.balance_history(account=POLYGON_ACCOUNT, end_block=20856092)]
+def test_polygon_balance_history(w3_with_eth_account):
+    polygon = PolygonScanner(w3=w3_with_eth_account)
+    balance_history = [
+        *polygon.balance_history(account=POLYGON_ACCOUNT, end_block=20856092)
+    ]
     assert balance_history == POLYGON_ACCOUNT_BALANCE_HISTORY
 
 
 @pytest.mark.skip()
 def test_ethereum():
+    ether = EtherScanner()
+    balance_history = [*ether.balance_history(ETH_ACCOUNT)]
+    assert balance_history == ETH_ACCOUNT_BALANCE_HISTORY
+
+
+@pytest.mark.skip()
+def test_polygon_mainnet():
+    polygon = PolygonScanner()
+    balance_history = [
+        *polygon.balance_history(account=POLYGON_ACCOUNT, end_block=20856092)
+    ]
+    assert balance_history == POLYGON_ACCOUNT_BALANCE_HISTORY
+
+
+@pytest.mark.skip()
+def test_ethereum_mainnet():
     ether = EtherScanner()
     balance_history = [*ether.balance_history(ETH_ACCOUNT)]
     assert balance_history == ETH_ACCOUNT_BALANCE_HISTORY

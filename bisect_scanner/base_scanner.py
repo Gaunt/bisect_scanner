@@ -1,4 +1,4 @@
-from typing import Iterable, Callable, TypeVar, List, Tuple, Union
+from typing import List, Tuple, Union
 from abc import ABC, abstractmethod
 from more_itertools import windowed
 from bisect_scanner import util
