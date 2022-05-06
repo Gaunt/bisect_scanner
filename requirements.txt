@@ -5,4 +5,4 @@ numpy
 matplotlib
 pytest
 web3[tester]
-eth-tester==0.6.0b6
+eth-tester
