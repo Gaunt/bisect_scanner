@@ -2,7 +2,7 @@ import time
 from typing import Iterable, Callable, TypeVar, List, Tuple
 import operator as op
 import itertools as it
-
+import re
 
 def scan_steps(start_block: int, end_block: int, steps: int) -> List[int]:
     """
@@ -56,3 +56,10 @@ def produce_gradual(
     for balance in slowed_down(balances, delay):
         balances_.append(balance)
         yield balances_.copy() + ([(end_block, 0)] if end_block else [])
+
+
+def check_addr(address):
+    if not isinstance(address, str):
+        raise ValueError('address must be string')
+    addr_regex = r'^(0x){1}[0-9a-fA-F]{40}$'
+    return bool(re.match(addr_regex, address))

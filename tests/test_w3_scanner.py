@@ -1,8 +1,16 @@
 import pytest
+from web3.providers import eth_tester
 from bisect_scanner import EtherScanner, PolygonScanner
-from eth_tester import EthereumTester, MockBackend
+from eth_tester import EthereumTester #, MockBackend
 from eth_account import Account, account
 from web3 import EthereumTesterProvider, Web3
+
+import eth_tester.backends.mock.main as mock_backend
+from . import eth_mock_utils
+
+
+mock_backend._get_default_account_data = eth_mock_utils.account_defaults
+MockBackend = mock_backend.MockBackend
 
 
 POLYGON_ACCOUNT = "0x1C8e628381A7752C4bE1dd493427D4091e97ba7f"
@@ -29,9 +37,16 @@ ETH_ACCOUNT_BALANCE_HISTORY = [
 ]
 
 
+SIMPLE_TRANSACTION = {
+    "to": ETH_ACCOUNT,
+    "gas_price": 0,
+    "value": 0,
+    "gas": 0,
+}
+
 @pytest.fixture
 def tester_provider():
-    ethereum_tester = EthereumTester(backend=MockBackend())
+    ethereum_tester = EthereumTester(backend=MockBackend(alloc=()))
     return EthereumTesterProvider(ethereum_tester=ethereum_tester)
 
 
@@ -45,23 +60,31 @@ def w3(tester_provider):
     return Web3(tester_provider)
 
 
+def insert_account(tester, w3, history=None):
+    priv_key = ETH_ACCOUNT_TEST_PRIV
+    tester.add_account(priv_key)
+    account = w3.eth.account.from_key(priv_key)
+
+    # for block, balance in ETH_ACCOUNT_BALANCE_HISTORY:
+    #     tester.time_travel(block)
+        
+    print(tester.get_accounts()[-1])
+    print(account.address)
+    assert account.address == ETH_ACCOUNT
+
+
 @pytest.fixture
 def w3_with_eth_account(tester_provider):
     w3 = Web3(tester_provider)
     tester = tester_provider.ethereum_tester
-    priv_key = ETH_ACCOUNT_TEST_PRIV
-    tester.add_account(priv_key)
-    account = w3.eth.account.from_key(priv_key)
-    print(tester.get_accounts()[-1])
-    print(account.address)
-    assert account.address == ETH_ACCOUNT
-    # insert_account(tester, account, balance_history)
+    insert_account(tester, w3)
     return Web3(tester_provider)
 
 
+@pytest.mark.skip()
 def test_polygon_balance(w3_with_eth_account):
     polygon = PolygonScanner(w3=w3_with_eth_account, account=ETH_ACCOUNT)
-    assert polygon.block_balance(ETH_ACCOUNT) == 1000000.0
+    assert polygon.block_balance(ETH_ACCOUNT) == 0
 
 
 @pytest.mark.skip()
