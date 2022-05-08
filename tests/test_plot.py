@@ -29,14 +29,17 @@ def test_step_fn():
     assert set(linsp) == {0.0, 0.015, 0.009, 0.005}
 
 
+@pytest.mark.plot
 def test_plot():
     plot.plot(BALANCES)
 
 
+@pytest.mark.plot
 def test_plot_gradual():
     plot.plot_gradual(slowed_down(BALANCES, delay=0))
 
-
+    
+@pytest.mark.plot
 def test_with_plot():
     balances = [*plot.with_plot(slowed_down(BALANCES, delay=0))]
     assert balances == [
