@@ -1,7 +1,12 @@
 from pathlib import Path
 from setuptools import find_packages
 from setuptools import setup
-import bisect_scanner
+from pathlib import Path
+import os
+#from bisect_scanner.version import __version__
+
+
+__version__ = "0.1.10"
 
 
 try:
@@ -10,7 +15,10 @@ except ImportError:
     from pip.req import parse_requirements
 
 
-install_reqs = [*parse_requirements("requirements.txt", session="hack")]
+basepath = Path(os.path.dirname(__file__))
+    
+requirements_path = basepath / Path("requirements.txt")
+install_reqs = [*parse_requirements(str(requirements_path), session="hack")]
 
 try:
     reqs = [str(ir.req) for ir in install_reqs]
@@ -19,9 +27,10 @@ except AttributeError:
 
 README = (Path(__file__).absolute().parent / "README.md").read_text()
 
+
 setup(
     name="bisect_scanner",
-    version=bisect_scanner.__version__,
+    version=__version__,
     url="https://github.com/Gaunt/bisect_scanner",
     license="MIT",
     author="Karel Novak",

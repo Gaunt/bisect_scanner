@@ -1,7 +1,6 @@
 from os import access
 from typing import List, Tuple, Union
 from abc import ABC, abstractmethod
-from attr import validate
 from more_itertools import windowed
 from bisect_scanner import util
 import bisect
