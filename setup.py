@@ -2,8 +2,16 @@ from pathlib import Path
 from setuptools import find_packages
 from setuptools import setup
 from pathlib import Path
-from version import __version__
 import os
+
+
+def get_version():
+    from importlib.machinery import SourceFileLoader
+    version = SourceFileLoader('version', 'bisect_scanner/version.py').load_module()
+    return version.__version__
+
+
+VERSION = get_version()
 
 
 try:
@@ -27,7 +35,7 @@ README = (Path(__file__).absolute().parent / "README.md").read_text()
 
 setup(
     name="bisect_scanner",
-    version=__version__,
+    version=VERSION,
     url="https://github.com/Gaunt/bisect_scanner",
     license="MIT",
     author="Karel Novak",

@@ -1,3 +1,4 @@
+from importlib.abc import SourceLoader
 from subprocess import run
 import os
 import shlex
@@ -13,16 +14,21 @@ except NameError:
     basepath = (Path(os.getcwd()) / Path("..")).absolute().resolve()
 
 
-with open(basepath / "version.py") as f:
-    __version__ = ''
-    exec(f.read())
-    assert __version__
-    version = __version__
+def get_version():
+    from importlib.machinery import SourceFileLoader
+
+    version = SourceFileLoader(
+        "version", str(basepath / "bisect_scanner" / "version.py")
+    ).load_module()
+    return version.__version__
+
+
+version = get_version()
 
 
 def build():
     for f in basepath.glob("dist/*"):
-        print(f'removing {f}')
+        print(f"removing {f}")
         os.remove(f)
     setup_path = basepath / "setup.py"
     run(shlex.split(f"python {setup_path} sdist bdist_wheel"), check=True)
