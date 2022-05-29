@@ -25,10 +25,20 @@ basepath = Path(os.path.dirname(__file__))
 requirements_path = basepath / Path("requirements.txt")
 install_reqs = [*parse_requirements(str(requirements_path), session="hack")]
 
+dev_requirements_path = basepath / Path("requirements-dev.txt")
+dev_install_reqs = [*parse_requirements(str(dev_requirements_path), session="hack")]
+
+
 try:
     reqs = [str(ir.req) for ir in install_reqs]
 except AttributeError:
     reqs = [str(ir.requirement) for ir in install_reqs]
+
+try:
+    dev_reqs = [str(ir.req) for ir in dev_install_reqs]
+except AttributeError:
+    dev_reqs = [str(ir.requirement) for ir in dev_install_reqs]
+
 
 README = (Path(__file__).absolute().parent / "README.md").read_text()
 
@@ -45,6 +55,7 @@ setup(
     long_description=README,
     packages=find_packages(exclude=("tests",)),
     install_requires=reqs,
+    tests_require=dev_reqs,
     classifiers=[
         "Development Status :: 4 - Beta",
         "License :: OSI Approved :: MIT License",
