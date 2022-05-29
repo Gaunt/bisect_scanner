@@ -44,6 +44,9 @@ def publish():
 
 def tag():
     tag_name = f"v{version}"
+    git_status = run(["git", "status"], capture_output=True, encoding="utf-8").stdout
+    if not ('working tree clean' in git_status):
+        raise SystemExit("uncommited changes, interrupted")
     if len([*basepath.glob(f"dist/bisect_scanner-{version}*")]):
         print(f"Build {version} exists, will be rebuilt")
 
