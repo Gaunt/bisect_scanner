@@ -1,0 +1,6 @@
+web3
+more-itertools
+python-dotenv
+pytest
+web3[tester]
+eth-tester
