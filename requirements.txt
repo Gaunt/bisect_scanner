@@ -1,8 +1,6 @@
 web3
 more-itertools
 python-dotenv
-numpy
-matplotlib
 pytest
 web3[tester]
 eth-tester

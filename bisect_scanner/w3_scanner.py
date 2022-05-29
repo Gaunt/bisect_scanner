@@ -6,6 +6,7 @@ from functools import lru_cache
 from typing import Union
 import web3
 from bisect_scanner.base_scanner import BaseScanner
+from bisect_scanner.config import config
 import requests
 
 
@@ -13,6 +14,7 @@ W3_URL = os.getenv("W3_URL", "")
 DECIMALS = 18
 DELAY = 0.0
 CACHE_SIZE = 100_000
+
 
 ABI = """[
   {
@@ -118,33 +120,30 @@ class W3Scanner(BaseScanner):
         return self.web3
 
 
-ETHEREUM_URL = os.getenv("BISECT_SCANNER_ETHEREUM_URL", "")
-POLYGON_URL = os.getenv("BISECT_SCANNER_POLYGON_URL", "")
-
-
 def check_config(wr_url, **kwargs):
     pass
 
+
 class EtherScanner(W3Scanner):
     def __init__(self, *args, **kwargs):
-        super().__init__(w3=ETHEREUM_URL, *args, **kwargs)
+        super().__init__(w3=config.ETHEREUM_URL, *args, **kwargs)
 
 
 class PolygonScanner(W3Scanner):
     def __init__(self, *args, **kwargs):
-        kwargs = {'w3': POLYGON_URL, **kwargs}
+        kwargs = {'w3': config.POLYGON_URL, **kwargs}
         super().__init__(*args, **kwargs)
 
 
 class EthereumERC20Scanner(W3Scanner):
     def __init__(self, contract_address, *args, **kwargs):
         super().__init__(
-            w3=ETHEREUM_URL, contract_address=contract_address, *args, **kwargs
+            w3=config.ETHEREUM_URL, contract_address=contract_address, *args, **kwargs
         )
 
 
 class PolygonERC20Scanner(W3Scanner):
     def __init__(self, contract_address, *args, **kwargs):
         super().__init__(
-            w3=POLYGON_URL, contract_address=contract_address, *args, **kwargs
+            w3=config.POLYGON_URL, contract_address=contract_address, *args, **kwargs
         )

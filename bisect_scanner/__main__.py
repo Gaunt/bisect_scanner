@@ -3,7 +3,6 @@ import sys
 import argparse
 from .w3_scanner import PolygonScanner, EtherScanner, DECIMALS
 from .base_scanner import SlowedDownScanner
-from .plot import with_plot
 
 
 SAMPLE_ADDRESS = "0xCD6909C37CCEA877a5c8e9a3ffd69d9D9943409F"
@@ -27,13 +26,12 @@ def main(
     scan_step=1,
     scanner="Ethereum",
     contract_address=None,
-    plot=False,
 ):
     assert account
     if scanner == "Polygon":
         scanner = PolygonScanner()
     elif scanner == "fake":
-        scanner = SlowedDownScanner(delay=1)
+        scanner = SlowedDownScanner(delay=0.1)
     else:
         scanner = EtherScanner(contract_address=contract_address)
     if not end_block:
@@ -41,11 +39,7 @@ def main(
     balances = scanner.balance_history(
         account=account, start_block=start_block, end_block=end_block
     )
-    if plot:
-        balances = with_plot(balances, end_block)
     write_csv(balances)
-    if plot:
-        input("Press Enter to continue...")
 
 
 def parse_args(argv):
@@ -55,7 +49,7 @@ def parse_args(argv):
         " also can plot a chart with --plot switch.\n"
         f"Example: python -m bisect_scanner --account={SAMPLE_ADDRESS}",
     )
-    parser.add_argument("--account", help="address")
+    parser.add_argument("--account", required=True, help="address")
     parser.add_argument("--contract_address", help="ERC20 contract address")
 
     parser.add_argument("--scan_step", type=int, default=1, help="scan step")
@@ -78,7 +72,6 @@ def parse_args(argv):
         action="store_true",
         help="fake chain for testing purposes only",
     )
-    parser.add_argument("--plot", action="store_true", help="plot chart")
     return parser.parse_args(argv)
 
 
@@ -93,5 +86,4 @@ if __name__ == "__main__":  # pragma: no cover
         scan_step=args.scan_step,
         scanner="Ethereum" if not args.polygon else "Polygon",
         contract_address=args.contract_address,
-        plot=args.plot,
     )

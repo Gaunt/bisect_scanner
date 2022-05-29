@@ -4,6 +4,7 @@ import operator as op
 import itertools as it
 import re
 
+
 def scan_steps(start_block: int, end_block: int, steps: int) -> List[int]:
     """
     >>> scan_steps(0, 10, 5)

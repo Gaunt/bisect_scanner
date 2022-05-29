@@ -3,8 +3,6 @@ from setuptools import find_packages
 from setuptools import setup
 from pathlib import Path
 import os
-#from bisect_scanner.version import __version__
-
 
 __version__ = "0.1.10"
 

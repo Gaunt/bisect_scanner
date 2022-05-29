@@ -39,6 +39,7 @@ nosetests.xml
 
 # Emacs backup files
 *~
+\#*\#
 
 # .env
 
