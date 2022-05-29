@@ -14,7 +14,9 @@ except NameError:
 
 
 with open(basepath / "version.py") as f:
+    __version__ = ''
     exec(f.read())
+    assert __version__
     version = __version__
 
 
