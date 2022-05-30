@@ -6,9 +6,10 @@ from functools import lru_cache
 from typing import Union
 import web3
 from bisect_scanner.base_scanner import BaseScanner
-from bisect_scanner.config import config
+import bisect_scanner.config as config
 import requests
 
+config = config.Config()
 
 W3_URL = os.getenv("W3_URL", "")
 DECIMALS = 18
@@ -99,7 +100,7 @@ class W3Scanner(BaseScanner):
                 account, block, self.contract_address
             )
         else:
-            balance = self.w3().eth.getBalance(str(self.account), block)
+            balance = self.w3().eth.getBalance(str(account), block)
         if balance is None:
             return None
         else:

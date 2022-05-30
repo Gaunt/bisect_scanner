@@ -55,3 +55,4 @@ def test_configure():
     os.environ['BISECTSCANNER_POLYGON_URL'] = 'wss://polygon_url'
     configure()
     assert config.config.POLYGON_URL == 'wss://polygon_url'
+    assert config.config.ETHEREUM_URL == 'wss://ethereum_url'

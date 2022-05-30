@@ -68,12 +68,18 @@ optional arguments:
   --fake                fake chain for testing purposes only
 ```
 
-<!-- ### An Example -->
+### An Example
 
 
-<!-- ```console -->
-<!-- $ python -m bisect_scanner --account='0x790370ff5045bCeCc2161f0913302FCCC7Ee256d' --plot -->
-<!-- ``` -->
+```console
+$ python -m bisect_scanner --account='0x790370ff5045bCeCc2161f0913302FCCC7Ee256d'
+block,balance
+0,0.0
+11503731,0.005
+12103372,0.015
+12107610,0.009
+12425773,0.0
+```
 
 <!-- ![](assets/peek_2_fast.gif) -->
 
