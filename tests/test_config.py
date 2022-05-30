@@ -44,15 +44,14 @@ def test_load_config_valid(valid_config_file):
 
 
 def test_no_confg():
-    config = Config()
+    config = Config('nonexistent.ini')
     assert config.ETHEREUM_URL is None
     os.environ['BISECTSCANNER_ETHEREUM_URL'] = 'wss://url'
-    config = Config()
+    config = Config('nonexistent.ini')
     assert config.ETHEREUM_URL == 'wss://url'
 
 
 def test_configure():
     os.environ['BISECTSCANNER_POLYGON_URL'] = 'wss://polygon_url'
-    configure()
+    configure('nonexistent.ini')
     assert config.config.POLYGON_URL == 'wss://polygon_url'
-    assert config.config.ETHEREUM_URL == 'wss://ethereum_url'

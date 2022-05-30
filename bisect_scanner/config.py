@@ -34,6 +34,6 @@ def load_config(config_path=CONFIG_PATH):
 
 
 config = None
-def configure():
+def configure(config_path=CONFIG_PATH):
     global config
-    config = Config(config_path=CONFIG_PATH)
+    config = Config(config_path=config_path)
