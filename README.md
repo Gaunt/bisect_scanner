@@ -36,18 +36,17 @@ $ pip install bisect-scanner
 
 ```console
 $ python -m bisect_scanner --help
-usage: python -m bisecect_scanner [-h] [--account ACCOUNT]
+usage: python -m bisecect_scanner [-h] --account ACCOUNT
                                   [--contract_address CONTRACT_ADDRESS]
                                   [--scan_step SCAN_STEP]
                                   [--precission PRECISSION]
                                   [--interpolation_step INTERPOLATION_STEP]
                                   [--start_block START_BLOCK]
                                   [--end_block END_BLOCK] [--polygon]
-                                  [--ethereum] [--fake] [--plot]
+                                  [--ethereum] [--fake]
 
-Outputs account balance history on stdout in the csv format, also can plot a
-chart with --plot switch. Example: python -m bisect_scanner
---account=0xCD6909C37CCEA877a5c8e9a3ffd69d9D9943409F
+Outputs account balance history on stdout in the csv format,Example: python -m
+bisect_scanner --account=0xCD6909C37CCEA877a5c8e9a3ffd69d9D9943409F
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -67,17 +66,16 @@ optional arguments:
   --polygon             Polygon (MATIC native Token)
   --ethereum            Ethereum (default)
   --fake                fake chain for testing purposes only
-  --plot                plot chart
 ```
 
-### An Example
+<!-- ### An Example -->
 
 
-```console
-$ python -m bisect_scanner --account='0x790370ff5045bCeCc2161f0913302FCCC7Ee256d' --plot
-```
+<!-- ```console -->
+<!-- $ python -m bisect_scanner --account='0x790370ff5045bCeCc2161f0913302FCCC7Ee256d' --plot -->
+<!-- ``` -->
 
-![](assets/peek_2_fast.gif)
+<!-- ![](assets/peek_2_fast.gif) -->
 
 
 ## Authors
