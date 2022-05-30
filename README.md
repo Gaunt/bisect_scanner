@@ -84,6 +84,19 @@ block,balance
 <!-- ![](assets/peek_2_fast.gif) -->
 
 
+## Configuration
+
+Configuration can be stored in `~/.config/bisect_scanner.ini` file
+
+### Example of bisect_scanner.ini file
+
+```
+[node_urls]
+W3_URL=archive_node_url_for_general_w3scanner
+POLYGON_URL=argive_node_url_for_polygonscanner
+ETHEREUM_URL=archive_node_url_for_etherscanner
+```
+
 ## Authors
 
 `bisect_scanner` was written by `Karel Novak`.
