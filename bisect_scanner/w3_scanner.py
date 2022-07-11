@@ -100,7 +100,7 @@ class W3Scanner(BaseScanner):
                 account, block, self.contract_address
             )
         else:
-            balance = self.w3().eth.getBalance(str(account), block)
+            balance = self.w3().eth.get_balance(str(account), block)
         if balance is None:
             return None
         else:
@@ -115,7 +115,7 @@ class W3Scanner(BaseScanner):
             return None
 
     def last_block(self):
-        return self.w3().eth.blockNumber
+        return self.w3().eth.block_number
 
     def w3(self):
         return self.web3

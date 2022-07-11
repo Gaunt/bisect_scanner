@@ -60,14 +60,14 @@ def w3(tester_provider):
     return Web3(tester_provider)
 
 
-def insert_account(tester, w3, history=None):
+def insert_account(tester, w3, history):
     priv_key = ETH_ACCOUNT_TEST_PRIV
     tester.add_account(priv_key)
     account = w3.eth.account.from_key(priv_key)
-
-    # for block, balance in ETH_ACCOUNT_BALANCE_HISTORY:
-    #     tester.time_travel(block)
-        
+    
+    for block, balance in history:
+        tester.time_travel(block)
+    
     print(tester.get_accounts()[-1])
     print(account.address)
     assert account.address == ETH_ACCOUNT
@@ -77,13 +77,12 @@ def insert_account(tester, w3, history=None):
 def w3_with_eth_account(tester_provider):
     w3 = Web3(tester_provider)
     tester = tester_provider.ethereum_tester
-    insert_account(tester, w3)
+    insert_account(tester, w3, [])
     return Web3(tester_provider)
 
 
-@pytest.mark.skip()
 def test_polygon_balance(w3_with_eth_account):
-    polygon = PolygonScanner(w3=w3_with_eth_account, account=ETH_ACCOUNT)
+    polygon = PolygonScanner(w3=w3_with_eth_account)
     assert polygon.block_balance(ETH_ACCOUNT) == 0
 
 
